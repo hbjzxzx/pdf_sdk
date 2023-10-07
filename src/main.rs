@@ -5,7 +5,9 @@ use win_test::run;
 //     window::{WindowBuilder},
 // };
 
+use std::env::current_dir;
 
 fn main() {
+    println!("current dir is: {}", current_dir().unwrap().to_str().unwrap());
     run()
 }
