@@ -6,6 +6,8 @@ use std::time::Duration;
 
 #[cfg (not(target_arch = "wasm32"))] 
 fn bench_render_page(c: &mut Criterion) {
+    use pathfinder_renderer::scene::Scene;
+
     let file = FileOptions::cached().open("/home/sebk/Downloads/10.1016@j.eswa.2020.114101.pdf").unwrap();
     let resolver = file.resolver();
 
@@ -14,7 +16,8 @@ fn bench_render_page(c: &mut Criterion) {
     group.warm_up_time(Duration::from_secs(1));
 
     let mut cache = Cache::new();
-    let mut backend = SceneBackend::new(&mut cache);
+    let mut secen = Scene::new();
+    let mut backend = SceneBackend::new(cache, &mut secen);
     for (i, page) in file.pages().enumerate() {
         if let Ok(page) = page {
             group.bench_function(&format!("page {}", i), |b| b.iter(|| render_page(&mut backend, &resolver, &page, Default::default()).unwrap()));
